@@ -85,7 +85,11 @@ Here are the similarities with NuxtJS:
 
 ### Compiling SASS assets
 
-* as writing CSS for an application can quickly become a tedious task, this projects follows some opinionated guidelines: [more details here](wiki/css_integration_model.md)
+* as writing CSS for an application can quickly become a tedious task, this projects follows some opinionated guidelines
+
+[See "CSS integration model" wiki](wiki/css_integration_model.md)
+
+
 * overall, structuring the main CSS file will follow this pattern:
 
 ```
@@ -192,7 +196,9 @@ Ideally with PureScript + Reactix, the aim could be to have a Row such as `attrs
 
 ## Form validation
 
-PureScript possesses some already existing libraries regarding validation ("purescript-formless-independent", "purescript-home-run-ball", etc.), but they seemed far too clunky to be used in a simple way for simple things. The project contains an interface with the native "purescript-validation": [more details here](wiki/on_validation.md).
+PureScript possesses some already existing libraries regarding validation ("purescript-formless-independent", "purescript-home-run-ball", etc.), but they seemed far too clunky to be used in a simple way for simple things. The project contains an interface with the native "purescript-validation"
+
+[See "On Validation" wiki](wiki/on_validation.md).
 
 ***
 
@@ -233,7 +239,7 @@ At this moment in PureScript, only few examples remain (we can think of ["puresc
 There is a lot of existing simple rules to follow while creating a Component Tree for a frontend application, such as: avoid *["prop drilling"](https://scotch.io/courses/10-react-challenges-beginner/use-context-to-pass-data)* ; or what we said earlier *"the deeper, the dumber"*. This cookbook presents some design pattern reusable for PureScript Reactix components.
 
 
-More details [here](wiki/a_cookbook_to_component_style_patterns.md)
+[See "Cook to component style patterns" wiki](wiki/a_cookbook_to_component_style_patterns.md)
 
 ### About Modals
 
