@@ -1,0 +1,75 @@
+/// We made the choice to let the "form-group" element purely declarative, as
+/// reality projected use cases are far too numerous. Making structural rules
+/// (ie. making specific UI Component sets) wouldn't be a best practice.
+.form-group {
+  $self: &;
+
+  position: relative;
+  margin-bottom: space-x(3);
+
+  &__label {
+    padding-bottom: space-x(0.5);
+
+    label {
+      font-weight: 500;
+    }
+
+    &--sub {
+      color: $gray-60;
+      font-size: 14px;
+    }
+  }
+
+  &__field {
+    // (?) In most cases, we found that error directive integrated within
+    //     the "form-group__field" reach actually breaks the design when it
+    //     pops out
+    //     Hence the `position: absolute` rule, mostly avoiding this UI break
+    #{ $self }__error,
+    #{ $self }__success {
+      position: absolute;
+      overflow: hidden;
+      //   (below is the reversing process rule)
+      &--obtrusive {
+        position: static;
+        overflow: initial;
+      }
+    }
+  }
+}
+
+/// Managing error presence while using <form-group> component
+/// This design is based on Bootstrap 2 form management
+/// @link https://getbootstrap.com/2.3.2/base-css.html#Validation%20states
+.form-group--error {
+  label { color: $c-error; }
+
+  .b-form-input { @include inputError; }
+
+}
+
+.form-group {
+
+  &__error,
+  &__success,
+  &__warning {
+    padding-top: 2px;
+    font-size: 12px;
+    padding-left: 0.75rem;
+  }
+
+  &__error   { color: $c-error; }
+  &__success { color: $c-success; }
+  &__warning { color: $c-warning; }
+}
+
+.form-input {
+  // Based on "vue-bootstrap" implementation of SVG icon within the input
+  &--address {
+    padding-right: calc(1.5em + 0.75rem);
+    background-repeat: no-repeat;
+    background-size: calc(0.5em + 0.375rem) calc(0.5em + 0.375rem);
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-4.198 0-8 3.403-8 7.602 0 4.198 3.469 9.21 8 16.398 4.531-7.188 8-12.2 8-16.398 0-4.199-3.801-7.602-8-7.602zm0 11c-1.657 0-3-1.343-3-3s1.343-3 3-3 3 1.343 3 3-1.343 3-3 3z"/></svg>');
+  }
+}

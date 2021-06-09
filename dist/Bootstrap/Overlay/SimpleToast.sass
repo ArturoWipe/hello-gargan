@@ -1,0 +1,40 @@
+// Helloo 
+.b-simple-toast
+  animation: _enterFromLeft 300ms ease-in
+  transition: opacity 300ms
+
+  &__inner
+    display: flex
+    flex-direction: row-reverse
+    align-items: baseline
+    border-left-width: space-x(0.5)
+    border-left-style: solid
+    padding: space-x(1) space-x(0.5)
+
+  .toast-header
+    justify-content: flex-end
+    border-bottom: initial
+
+  .toast-body
+    flex-grow: 1
+
+  &--autohide
+
+    .toast-header
+      visibility: hidden
+
+  &--light &__inner
+    border-color: transparent
+
+  &--success &__inner
+    border-color: $c-success
+
+  &--warning &__inner
+    border-color: $c-warning
+
+  &--error &__inner
+    border-color: $c-error
+
+  &--info &__inner
+    border-color: $c-info
+@import "/home/arturo/workspace/purescript/gargantext-reactix/.build/parts/Bootstrap/Overlay/SimpleToast.sass";

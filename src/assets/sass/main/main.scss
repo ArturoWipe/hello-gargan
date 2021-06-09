@@ -1,0 +1,15 @@
+@charset 'utf-8';
+
+// Global
+@forward './base/_reset';
+@forward './base/_typography';
+@forward './base/_animation';
+
+// Content
+@forward './base/_form';
+@forward './base/_loading-progress-bar';
+@forward './base/_toast';
+@forward './base/error-boundary';
+
+// (?) note that other styles from "/Components" and "/Pages" folder will
+//     be automatically forwarded here

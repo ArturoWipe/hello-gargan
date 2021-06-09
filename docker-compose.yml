@@ -1,0 +1,19 @@
+version: "3.5"
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: .release
+      dockerfile: Dockerfile.dev
+    command: ["bash", ".release/startup.sh"]
+    stdin_open: true
+    privileged: true
+    user: $CURRENT_USER
+    tty: true
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/opt/app
+      - /etc/group:/etc/group:ro
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/shadow:/etc/shadow:ro

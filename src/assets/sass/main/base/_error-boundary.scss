@@ -1,0 +1,37 @@
+@use '~src/assets/sass/main/_abstract' as *;
+
+.error-boundary {
+  width: 100%;
+  height: 100%;
+  background-color: $white;
+  padding: space-x(8);
+  font-family: $font-family-monospace;
+  position: relative;
+
+  // see "App.purs@loadingProgressbarParams": simulate error topbar UI
+  &__border {
+    height: 2px;
+    background-color: $c-error;
+    box-shadow: rgba(100, 100, 100, 0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  &__message {
+    font-size: 28px;
+    color: $gray-20;
+    margin-bottom: space-x(5);
+  }
+
+  &__stack {
+    border-left: 1px solid $gray-85;
+    background-color: $gray-99;
+    color: $gray-30;
+    padding: space-x(1.5) space-x(3);
+    margin-bottom: space-x(3);
+    line-height: 1.6;
+    letter-spacing: 0.2px;
+  }
+}

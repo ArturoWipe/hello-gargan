@@ -1,0 +1,61 @@
+/// UX/UI rules regarding element that can be clicked and
+/// others than <a/> tags
+@mixin clickable() {
+  cursor: pointer;
+  &:focus { outline: 0; }
+}
+
+@mixin unclickable() {
+  cursor: default;
+  &:focus { outline: 0; }
+}
+
+@mixin unselectable() {
+  user-select: none;
+}
+
+@mixin disabled() {
+  cursor: not-allowed;
+  &:focus { outline: 0; }
+}
+
+@mixin gradient($primary, $secondary, $direction) {
+  background: linear-gradient($direction, $primary, $secondary);
+}
+
+/// Centering an element (you'll have to change the position
+/// of the element though)
+@mixin centered() {
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+/// Mixin from "bootstrap v4"
+/// @link https://getbootstrap.com/docs/4.3/utilities/clearfix/
+@mixin clearfix() {
+  &::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+}
+
+/// Reverse an element
+@mixin reversed() {
+  transform: scaleX(-1);
+}
+
+/// Add led effect with the input color
+@mixin led($color) {
+  color: $color;
+  text-shadow: 0 0 4px brighten($color, 90);
+}
+
+/// Extend element to fit all four positions
+@mixin fit-positions() {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}

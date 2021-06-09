@@ -1,0 +1,25 @@
+.b-button-link
+  $self: &
+
+  @include clickable()
+
+  &:hover,
+  &:active,
+  &:focus
+    text-decoration: underline
+
+  &:visited
+    color: inherit
+
+  &--disabled
+    @include unclickable()
+
+    color: currentColor
+    display: inline-block  // For IE11/ MS Edge bug
+    pointer-events: none
+    text-decoration: none
+
+    #{ $self }:hover,
+    #{ $self }:active,
+    #{ $self }:focus
+      text-decoration: none

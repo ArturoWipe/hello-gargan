@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=Comfortaa:400,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
+
+body {
+  color: $gray-30;
+  font-size: $font-default-size;
+  // one of the web fonts used natively by Bootstrap
+  // cf. `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default`
+  font-family: $font-family-roboto;
+}
+
+input,
+button,
+select,
+optgroup,
+textarea {
+  font-family: inherit;
+}
+
+::selection {
+  color: $white;
+  background-color: $c-info;
+}

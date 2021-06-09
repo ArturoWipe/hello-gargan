@@ -1,0 +1,40 @@
+@keyframes _rotateCrossBefore {
+  from { transform: rotate(45deg);  }
+  to   { transform: rotate(225deg); }
+}
+@keyframes _rotateCrossAfter {
+  from { transform: rotate(-45deg); }
+  to   { transform: rotate(135deg);  }
+}
+@keyframes _fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes _fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes _enterFromBottom {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+@keyframes _enterFromTop {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+@keyframes _exitToTop {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-100%); }
+}
+@keyframes _exitToBottom {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100%); }
+}
+@keyframes _enterFromLeft {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes _rotate180 {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(180deg); }
+}

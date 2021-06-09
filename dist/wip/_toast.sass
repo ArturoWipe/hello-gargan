@@ -1,0 +1,15 @@
+#toast-container
+  position: fixed
+  padding: space-x(2)
+  left: 0
+  bottom: 0
+  width: 100%
+  animation: _enterFromLeft 600ms
+
+  .toast
+    margin-top: space-x(2)
+
+    .close
+      @include clickable()
+
+      font-size: inherit

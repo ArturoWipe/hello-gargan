@@ -1,0 +1,30 @@
+// Helloo 
+.b-button
+  $spinner-size: 20px
+  $self: &
+
+  @include clickable()
+
+  position: relative
+
+  // (!) `translate` CSS modifiers won't work with bootstrap spinner
+  &__spinner
+    position: absolute
+    left: calc(50% - #{ $spinner-size / 2 })
+    top: calc(50% - #{ $spinner-size / 2 })
+    width: $spinner-size
+    height: $spinner-size
+
+  &--disabled,
+  &--deferred,
+  &--idled
+    @include unclickable()
+
+  &--deferred
+
+    #{ $self }__inner
+      visibility: hidden
+
+  // icon alignement
+  .b-icon
+    vertical-align: text-top

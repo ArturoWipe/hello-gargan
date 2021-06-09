@@ -1,0 +1,25 @@
+/// Customising Bootstrap 4
+/// (part 1: overriding abstract variables)
+/// @link https://uxplanet.org/how-to-customize-bootstrap-b8078a011203
+
+@import "../../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../../node_modules/bootstrap/scss/variables";
+
+// @Color system
+$theme-colors: (
+  "primary"   : $c-primary,
+  "secondary" : $c-secondary,
+  "success"   : $c-success,
+  "danger"    : $c-error,
+  "warning"   : $c-warning,
+  "info"      : $c-info,
+  "dark"      : $c-tertiary,
+  "link"      : $c-info
+);
+
+// @Options
+$enable-shadows:              true !default;
+
+// @Cards
+$card-spacer-y:                     $card-space !default;
+$card-spacer-x:                     $card-space !default;

@@ -1,0 +1,15 @@
+@use '~src/assets/sass/main/abstract/variables/color' as *;
+
+$readonly-text-color: $gray-40;
+$readonly-border-style: dashed;
+
+$placeholder-text-color: $gray-80;
+
+@mixin inputError() {
+  border-color: $c-error;
+
+  &:focus, &:active {
+    border-color: $c-error;
+    box-shadow: 0 0 0 1px $c-error;
+  }
+}

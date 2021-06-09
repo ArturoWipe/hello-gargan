@@ -1,0 +1,35 @@
+// (?) Not relying on SASS `@use` API due to side effects while mixing old and
+//     new API (ie. `@import` vs `@use/@forward`)
+@import "~src/assets/sass/main/abstract/variables/color";
+@import "~src/assets/sass/main/abstract/variables/spacing";
+/// Customising Bootstrap 4
+/// (part 1: overriding abstract variables)
+/// @link https://uxplanet.org/how-to-customize-bootstrap-b8078a011203
+/// @link https://getbootstrap.com/docs/4.1/getting-started/theming/
+
+@import "@node_modules/bootstrap/scss/functions";
+@import "@node_modules/bootstrap/scss/variables";
+@import "@node_modules/bootstrap/scss/mixins";
+
+// #Color system
+$theme-colors: (
+  "primary"   : $c-primary,
+  "secondary" : $c-secondary,
+  "success"   : $c-success,
+  "danger"    : $c-error,
+  "warning"   : $c-warning,
+  "info"      : $c-info,
+  "dark"      : $c-tertiary,
+  "link"      : $c-info
+);
+
+// #Spacing
+$spacer: $space-unit;
+
+// #Options
+$enable-shadows: true;
+
+// #Cards
+$card-spacer-y: $card-space;
+$card-spacer-x: $card-space;
+$card-border-radius: 0;

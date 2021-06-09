@@ -1,0 +1,13 @@
+$input-readonly-text-color: $gray-40;
+$input-readonly-border-style: dashed;
+
+$input-placeholder-text-color: $gray-80;
+
+@mixin inputError() {
+  border-color: $c-error;
+
+  &:focus, &:active {
+    border-color: $c-error;
+    box-shadow: 0 0 0 1px $c-error;
+  }
+}

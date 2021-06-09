@@ -1,0 +1,13 @@
+@charset 'utf-8';
+/// @XXX: Bootstap4 still not fully compliant with SASS Modules API
+///
+///       Hence, as the project main CSS relies on SASS Modules, using
+///       `@import/@use` won't work with Bootstrap abstract
+///
+/// @link https://stackoverflow.com/questions/58793074/importing-bootstrap-into-my-scss-via-use-instead-of-import-causes-problems
+
+/// Overriding Bootstrap theme with our abtract content and variables
+@import './_abstract';
+
+/// Alternately, overriding can be made with CSS styles only
+@import './_base';
