@@ -113,8 +113,8 @@ execPremounting rootStore@{ "core/navigation": store } = do
     false -> pure $ Right unit
     true  -> attempt $ getLayoutPremount nextLayout rootStore
 
-  -- @TODO: for some reasons, couldn't managed to rely on `Either` bind
-  --        to stop computations on error (instead unDRY solution)
+  -- @XXX: for some reasons, couldn't managed to rely on `Either` bind
+  --       to stop computations on error (instead unDRY solution)
   case res of
     Left _  -> pure res
     Right _ -> attempt $ getPagePremount nextRoute rootStore

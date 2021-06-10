@@ -24,7 +24,7 @@ import Toestand as T
 -- So the Store.nextRoute is equivalent to the wished route to go in the future
 -- Store.route is being set as soon as the premount computations have succeded
 --
--- An error in premount process (@TODO), or a change of route made by the
+-- An error in premount process, or a change of route made by the
 -- user in parallel of the premount process causes the cancelation of the
 -- Aff executed for this effect
 

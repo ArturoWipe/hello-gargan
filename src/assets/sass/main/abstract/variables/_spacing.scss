@@ -1,8 +1,5 @@
 /// Global spacing value
 $space-unit: 8px;
 
-// @TODO: prefer new Sass API `@use`
-//        (in this case, customisation made on abstract bootstrap file
-//        will be sufficent: below line could be removed and take profit
-//        of the `@use` within each needed working files)
+/// Bootstrap Card value
 $card-space: $space-unit * 2.5;

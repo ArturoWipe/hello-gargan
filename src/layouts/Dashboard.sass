@@ -1,3 +1,5 @@
+$left-column-width: 300px
+
 .layout-dashboard
   width: 100%
   height: 100%
@@ -10,7 +12,6 @@
     padding: space-x(3)
     border-bottom: 1px solid $gray-95
     box-shadow: $shadow-discreet
-    // @TODO no uncontextualised z-index
     position: relative
     z-index: z('main', 'topbar')
 
@@ -21,7 +22,7 @@
     height: 100%
 
   &__left-column
-    width: 300px // @TODO no magic value
+    width: $left-column-width
     padding: space-x(3) space-x(2)
     border-right: 1px solid $gray-95
     background-color: $white
