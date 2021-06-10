@@ -1,30 +1,28 @@
 # On Validation
 
-> The project "FormValidation" hook's basis relies on other concepts visited in a previous VueJS homemade library from another project. The API will naturally be different (as you will read below), but the hypothesis remain the same.
-
 ## Motivations
 
 During the years we have seen a profusion of frontend libraries and frameworks. Each one having their little tweaks or characteristics, making them different from one another. Same can be said for one of the most important aspect of the frontend world: validation process. While assimilating this problematic to our project, this [article](https://www.monterail.com/blog/2016/rethinking-validations-for-vue-js) from Damian Dulisz is a good starting point to begin our thought process:
 
-> [...] if you work on a more data oriented application you’ll notice that you’re validating much more than just your inputs. Then you have to combine the above approach with custom validation methods or computed values. This introduces additional noise both in the templates and in your code. I also believe that templates are not the best place for declaring application logic.
+> “[...] if you work on a more data oriented application you’ll notice that you’re validating much more than just your inputs. Then you have to combine the above approach with custom validation methods or computed values. This introduces additional noise both in the templates and in your code. I also believe that templates are not the best place for declaring application logic.”
 
-Nevertheless, based on experiences with previous projects, we are inclined to approve this contrasting assertion by [Daniel Steigerwald](https://medium.com/@steida/why-validation-libraries-suck-b63b5ff70df5):
+Yeat we we are inclined to approve this assertion by [Daniel Steigerwald](https://medium.com/@steida/why-validation-libraries-suck-b63b5ff70df5):
 
-> Almost all validation libraries I have seen (and I wrote) suck. Everything is nice and all with *isRequired* and *isEmail*, but then suddenly things become complicated. Custom validations, async validation, cross form fields or even cross forms validation rules, we all have been there. The reason for all of that is simple. There is no such thing as an ideal validation library. [...] Duplication is far cheaper than the wrong abstraction.
+> “Almost all validation libraries I have seen (and I wrote) suck. Everything is nice and all with *isRequired* and *isEmail*, but then suddenly things become complicated. Custom validations, async validation, cross form fields or even cross forms validation rules, we all have been there. The reason for all of that is simple. There is no such thing as an ideal validation library. [...] Duplication is far cheaper than the wrong abstraction.”
 
-These opposite conclusions lead us to a hybrid proposition, taking benefits from both. So we made a simple library which:
+These conclusions lead us to a hybrid proposition, taking benefits from both. So we made a simple library which:
 * **Relies on a set of robust validators functions**. This [slideshare](https://www.slideshare.net/JosephKachmar/lc2018-input-validation-in-purescript) of Joseph Kachmar invited us to use the PureScript native "purescript-validation" [vendor](https://github.com/chriso/validator.js). These simple use cases can easily be redone in every component/hook/store possible.
 * **Proposes the most simple abstraction**. We have abstracted the process throughout two main actions: a method to check a specific entity, another one to check the entire set.
 
 ## Behavior
 
-1. methods checking the whole set of entities, the whole set of form fields: we click on the main call-to-action of the form, a global validation is attended.
-2. methods dynamically checking one or a few entity: controlling one particular async fields, validating a specific field while writing on it, etc.
-3. each global validation increment a step, as if it was lap ; dynamic validation does not
+1. methods **checking the whole** set of entities, the whole set of form fields: we click on the main call-to-action of the form, a global validation is attended.
+2. methods **dynamically checking one or a few** entity: controlling one particular async fields, validating a specific field while writing on it, etc.
+3. each **global validation increment a step**, as if it was lap ; dynamic validation does not
 
 ## API
 * **"purescript-validation" (SemiGroup)** Provide basic [API](https://pursuit.purescript.org/packages/purescript-validation/5.0.0/docs/Data.Validation.Semigroup#t:V) were we can append validation rules for multiple fields
-    * some already existing rules can be retrieved within the *~/plugins/Hooks/FormValidation*
+    * some already existing rules can be retrieved within the `~/plugins/Hooks/FormValidation`
     * every rules will returned a `SemiGroup` `VForm`
 
 
