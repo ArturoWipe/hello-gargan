@@ -1,0 +1,6 @@
+FROM node:15.14.0-stretch
+
+ENV CWD=/opt/app HOME=/opt/app TERM=xterm
+
+WORKDIR /opt/app
+EXPOSE 5000/tcp
