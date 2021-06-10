@@ -271,6 +271,6 @@ There is a lot of existing simple rules to follow while creating a Component Tre
 
 ## Milestones
 
-More details **[here]**(wiki/milestones.md)
+More details **[here](wiki/milestones.md)**
 
 @TODO bootstrap declarative class
