@@ -6,19 +6,19 @@ During the years we have seen a profusion of frontend libraries and frameworks. 
 
 > “[...] if you work on a more data oriented application you’ll notice that you’re validating much more than just your inputs. Then you have to combine the above approach with custom validation methods or computed values. This introduces additional noise both in the templates and in your code. I also believe that templates are not the best place for declaring application logic.”
 
-Yeat we we are inclined to approve this assertion by [Daniel Steigerwald](https://medium.com/@steida/why-validation-libraries-suck-b63b5ff70df5):
+Yet we are also ready to approve this assertion by [Daniel Steigerwald](https://medium.com/@steida/why-validation-libraries-suck-b63b5ff70df5):
 
 > “Almost all validation libraries I have seen (and I wrote) suck. Everything is nice and all with *isRequired* and *isEmail*, but then suddenly things become complicated. Custom validations, async validation, cross form fields or even cross forms validation rules, we all have been there. The reason for all of that is simple. There is no such thing as an ideal validation library. [...] Duplication is far cheaper than the wrong abstraction.”
 
-These conclusions lead us to a hybrid proposition, taking benefits from both. So we made a simple library which:
-* **Relies on a set of robust validators functions**. This [slideshare](https://www.slideshare.net/JosephKachmar/lc2018-input-validation-in-purescript) of Joseph Kachmar invited us to use the PureScript native "purescript-validation" [vendor](https://github.com/chriso/validator.js). These simple use cases can easily be redone in every component/hook/store possible.
+These conclusions lead us to a hybrid proposition, taking benefits from both. So we made a simple interface which:
+* **Relies on a set of robust validators functions**. This [slideshare](https://www.slideshare.net/JosephKachmar/lc2018-input-validation-in-purescript) of Joseph Kachmar invited us to use the PureScript native "purescript-validation". These simple use cases can easily be redone in every component/hook/store possible.
 * **Proposes the most simple abstraction**. We have abstracted the process throughout two main actions: a method to check a specific entity, another one to check the entire set.
 
-## Behavior
+## Behaviors
 
-1. methods **checking the whole** set of entities, the whole set of form fields: we click on the main call-to-action of the form, a global validation is attended.
-2. methods **dynamically checking one or a few** entity: controlling one particular async fields, validating a specific field while writing on it, etc.
-3. each **global validation increment a step**, as if it was lap ; dynamic validation does not
+1. ***methods checking the whole set of entities:** we click on the main call-to-action of the form, a global validation is attended.*
+2. ***methods dynamically checking one or a few entities:** controlling one particular async fields, validating a specific field while writing on it, etc.*
+3. ***each global validation increment a step**: as if it was lap ( dynamic validation does not)*
 
 ## API
 * **"purescript-validation" (SemiGroup)** Provide basic [API](https://pursuit.purescript.org/packages/purescript-validation/5.0.0/docs/Data.Validation.Semigroup#t:V) were we can append validation rules for multiple fields
@@ -112,6 +112,7 @@ component = R.hooksComponent cname cpt where
 
       ...
 ```
+***
 
 ### Dynamic validation
 * validate a specific input when user enters a new value
@@ -164,6 +165,8 @@ component = R.hooksComponent cname cpt where
 
         ...
 ```
+***
+
 ### Debouncing validation & Async validation
 * defer a validation operation (see David Corbacho's [article](https://css-tricks.com/debouncing-throttling-explained-examples/) for details explanation about debouncing)
 * check for specific error for a field to display
@@ -222,6 +225,7 @@ component = R.hooksComponent cname cpt where
 
         ...
 ```
+***
 
 ### Shared configuration validation
 * execute a validation outside of a component
@@ -234,12 +238,13 @@ component = R.hooksComponent cname cpt where
 
 ```
 
+***
 
 ### Evolutive validation type
 * start with a basic validation
 * if first submission fails, switch to a dynamic validation
 
-> *Why? It is a common case in UX. First deliver a basic form to the user. No need to afraid him during the process: no error is delivered on input focus and changes. When the user submit its form, it there that the error arrise. Now, if the user rightfully managed to correct an errored input (eg. the password confirmation field was not equal to the original password value), then it is a good practice to dynamically validate this field. It will show, lively, that the user has know entered the attended value (ie. more "reward" given to correct the rest of the form)
+> **Why?** It is a common case in UX. First deliver a basic form to the user. No need to afraid him during the process, as no error will be shown on input focus and changes. AS soon as the user submit its form, this is when the errors will arrise. Now, if the user rightfully managed to correct an errored input (eg. the password confirmation field was not equal to the original password value), then it is a good practice to dynamically validate this field. It will show, lively, that the user has know entered the attended value (so "rewarding" the user to continue with the correction process)
 
 ```purescript
 
@@ -250,7 +255,7 @@ component = R.hooksComponent cname cpt where
 
       setStateKey "password" value
 
-      if (fv.tryCount > 0) -- (!) only if one submit has been already made
+      if (fv.tryCount > 0) -- (!) only if one submit has already been made
 
       then pure unit
       <*   fv.removeError' "password"
