@@ -32,3 +32,5 @@ bundle.js
 /.lesshst
 /dist/js/**/*.map
 /dist/styles/**/*.map
+/.vscode
+yarn-error.log
