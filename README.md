@@ -25,10 +25,10 @@ yarn install -D && yarn install-ps
 ## Application Structure
 
 The likes of [NextJS](https://nextjs.org/) or [NuxtJS](https://nuxtjs.org/) offers clean architecture concerning folders and files. Not to mention all the automations available, they provide a simple architecture delimiting:
-1. entry points (ie. our pages)
-2. UI/UX components
-3. some "view-model" logic
-4. non-UX/UI related stuffs
+1. entry points *~ pages*
+2. UI/UX "view-model" logic *~ components*
+3. some "model-view" logic *~ stores*
+4. misc related stuffs *~ plugins*
 
 ### Components
 * it is easier for newcomers to provide a clean `"/components"` folder, each file containing its unique component
