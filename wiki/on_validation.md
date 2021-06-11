@@ -29,7 +29,7 @@ These conclusions lead us to a hybrid proposition, taking benefits from both. So
 
 
 * **~/plugins/Hooks/formValidation** component to be reused for composition pattern
-```purescript
+```haskell
 type Methods =
   -- | Check if previous "try/asyncTry" contains error
   -- |
@@ -66,7 +66,7 @@ type Methods =
 * perform a global validation when user clicks on a submit button
 * display a global error message if any entity is invalid
 
-```purescript
+```haskell
 type FormData =
   ( email :: String
   , password :: String
@@ -118,7 +118,7 @@ component = R.hooksComponent cname cpt where
 * validate a specific input when user enters a new value
 * display an error message below the element
 
-```purescript
+```haskell
 type FormData =
   ( email :: String
   , password :: String
@@ -172,7 +172,7 @@ component = R.hooksComponent cname cpt where
 * check for specific error for a field to display
 * call an asynchronous method executing a validation business for an element
 
-```purescript
+```haskell
 type FormData =
   ( email :: String
   , password :: String
@@ -231,7 +231,7 @@ component = R.hooksComponent cname cpt where
 * execute a validation outside of a component
 * perform identical validation operations from multiple scopes
 
-```purescript
+```text
 
 -- @TODO: make an example where the validation rules and execution are being
 --        made from within a Store (need Toestand library re-writing)
@@ -246,7 +246,7 @@ component = R.hooksComponent cname cpt where
 
 > **Why?** It is a common case in UX. First deliver a basic form to the user. No need to afraid him during the process, as no error will be shown on input focus and changes. AS soon as the user submit its form, this is when the errors will arrise. Now, if the user rightfully managed to correct an errored input (eg. the password confirmation field was not equal to the original password value), then it is a good practice to dynamically validate this field. It will show, lively, that the user has know entered the attended value (so "rewarding" the user to continue with the correction process)
 
-```purescript
+```haskell
 
     ...
 
