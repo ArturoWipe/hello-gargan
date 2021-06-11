@@ -5,7 +5,9 @@
 
 [Scoped CSS](https://css-tricks.com/saving-the-day-with-scoped-css/) is a huge advancement towards clean CSS for applications. Unfortunately, browsers [compliancy](https://caniuse.com/style-scoped) is a big issue. However frameworks and libraries, likes NuxtJS and Svelte, embed this feature thanks to automation process.
 
-- [ ] POC an implementation for PureScript + Reactix (difficulty :star: :star: :star:)
+***
+
+- [ ] *POC an implementation for PureScript + Reactix (difficulty :star: :star: :star:)*
 
 ## Regarding bootstrap component constants
 
@@ -16,35 +18,38 @@
 ### DOM Attributes POC
 
 
-#### a) :x: as an Open Records Props
+#### a) [~] as an Open Records Props
 
 
-```purescript
+```haskell
   myComponent { attrs: { className: "hello" }}
 ```
   * ***only works as a required props**: use is OK, but it definitely should not be a required prop*
   * ***usage with optional props must include some `unsafe...`**: totally not ideal*
 
-####  b) :x: as a SharedProps for every UI Component
+####  b) [x] as a SharedProps for every UI Component
 
 Just the likes of "react-basic" [base components props](https://github.com/lumihq/purescript-react-basic/blob/v0.7.1/src/React/Basic/DOM.purs#L33-L114)
 
-```purescript
+```haskell
   myComponent { className: "hello" }
 ```
 
 * **default value issue**: not suitable here, as every attrs props would need a default value
 
-####  c) :wavy_dash: Array of attributes
+####  c) [~] Array of attributes
 
 Same idea as the "react-basic" [API for props](https://github.com/purescript-contrib/purescript-react/blob/v9.0.0/src/React/DOM/Props.purs)
 
-```purescript
+```haskell
   myComponent { attrs: [ P.className "hello" ] }
 ```
-* ***ideas on this?***
 
-####  d) :heavy_check_mark: YAGNI
+*** 
+
+- [ ] *any idea on this?*
+
+####  d) [ok] YAGNI
 
 Statistically throughout all of my previous dashboard projects, cases were DOM attributes are used in such a way are on:
 * base components
