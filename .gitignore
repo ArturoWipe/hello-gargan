@@ -34,3 +34,4 @@ bundle.js
 /dist/styles/**/*.map
 /.vscode
 yarn-error.log
+/.build
