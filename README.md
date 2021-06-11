@@ -25,10 +25,10 @@ yarn install -D && yarn install-ps
 ## Application Structure
 
 The likes of [NextJS](https://nextjs.org/) or [NuxtJS](https://nuxtjs.org/) offers clean architecture concerning folders and files. Not to mention all the automations available, they provide a simple architecture delimiting:
-1. entry points *~ pages*
-2. UI/UX "view-model" logic *~ components*
-3. some "model-view" logic *~ stores*
-4. misc related stuffs *~ plugins*
+1. entry points ~ *pages*
+2. UI/UX "view-model" logic ~ *components*
+3. some "model-view" logic ~ *stores*
+4. misc related stuffs ~ *plugins*
 
 ### Components
 * it is easier for newcomers to provide a clean `"/components"` folder, each file containing its unique component
@@ -219,7 +219,7 @@ The transmission of DOM Attributes (programmatically or not) is a useful feature
 Ideally with PureScript + Reactix, the aim could be to have a Row such as `attrs :: DOMAttrs`. Where DOMAttrs could be used as a Record of optional values (such as the use in "purescript-react-basic"). Hence, two tweaks to work: attrs has to be optional, the content of the attrs Record also have to be optional. They have not vocation to be programmatically treated, just handed over from one component to another.
 
 
-### Pages & Layouts
+## Pages & Layouts structure
 
 These components respect the exact structure we saw earlier. However, they are prone to an implicit implementation, such as:
 * **determined variable names**: each module has to export a certain amount of attended variables
@@ -261,6 +261,81 @@ component = R.hooksComponent "page-misc" cpt where
   cpt _ _ = pure mempty
 ```
 
+## Store structure
+
+As said previously, these files are very similar from existing abstraction such as Vuex, Redux, Flux, etc. Basically the overall structure can be comprenhend as a global `Record RootStore` containing every existing stores of the project. Whereas stores are structures respecting an implicit implementation:
+* **determined filepath — filename representation**: *(automation still on work in progress)* eg. by creating a `Hello.Stores.Foo.Bar` store module, we create a `rootStore { "foo/bar": store | rootStore }` new `Row` within the `RootStore` variable
+* **determined variable and types names**: each module has to export a certain amount of attended variables
+* **`Store` & `State` types**: refering to both `Record`: a "boxed" Toestand representation, and a its vanilla value types
+* **`state` variable**: thunk hydrating default values of the store module
+
+```haskell
+module Hello.Stores.Public.Authentication
+  -- mandatory exports
+  ( state
+  , State
+  , Store
+  -- custom exports
+  , login
+  , LoginData
+  ) where
+
+import Prelude
+
+import Data.Either (Either)
+import Effect.Aff (Aff, Error, Milliseconds(..), attempt, delay)
+import Effect.Class (liftEffect)
+import Toestand as T
+
+type Store =
+  ( onPending :: T.Box (Boolean)
+  )
+
+type State =
+  ( onPending :: Boolean
+  )
+
+state :: Unit -> Record State
+state = \_ ->
+  { onPending: false
+  }
+
+type LoginData =
+  ( email :: String
+  , password :: String
+  )
+
+-- Below is an example of "actions" (from the predictable state container
+-- jargon). They are asynchroneous computations made on the current store
+--
+--
+-- Here are what we think can be three possibles implementations
+--
+--      a. "mutations": ie. synchroneous setters and computations, as we rely
+--         on Toestand best solution for that is to directly use the
+--         Toestand API
+--
+--      b. scoped "actions" (example below): take the `Record Store` in argument
+--         and return an `Aff *`
+--
+--      c. unscoped "actions": take the `Record RootStore` in first argument,
+--         the `Record Store` in second, returned an `Aff *`
+
+login :: Record Store -> Record LoginData -> Aff (Either Error Unit)
+login { onPending } _  = do
+
+  liftEffect $ T.write_ true onPending
+
+  result <- attempt $ simulateAPIRequest
+
+  liftEffect $ T.write_ false onPending
+
+  pure $ result
+
+simulateAPIRequest :: Aff Unit
+simulateAPIRequest = delay $ Milliseconds 2000.0
+
+```
 
 ## Form validation
 
