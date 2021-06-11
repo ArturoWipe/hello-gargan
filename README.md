@@ -141,20 +141,28 @@ From the tediousness of jQuery, to AngularJS (v1: producer, directives, ... heav
 * first of all recent JavaScript frontend libraries offers a simple yet comprehensive creational/structural/behavioral paradigms. ReactJS (Hooks API) opts for a fully JavaScript-ly functional composition paradigm. VueJS adheres to a [Single-File-Component](https://vuejs.org/v2/guide/single-file-components.html) abstraction. The former more difficult to understand for newcomers, but the latter less flexible. It is not a surprise here, but Reactix + Toestand in a PureScript context *is* the most reliable paradigm
 * secondly, regarding the boilerplate: when we see a VueJS Single-File-Component and a [Svelte component format](https://svelte.dev/docs), we can only applause the reduction of boilerplate. Each JavaScript frontend libraries offers an iteration in this regards. This is one of the reason to adopt the following structure for each component of the project:
 
-```purescript
+```haskell
+module Hello.Components.Example.Bar (bar) where
+
+import Prelude
+
+import Hello.Plugins.Core.UI as UI
+import Reactix as R
+
 -- Spec parts for <bar>
 type Props =
-  ( foo :: Foo
+  ( foo :: String
   )
 
-bar :: UI.Leaf Props
-bar = UI.leaf component
+bar :: UI.Tree Props
+bar = UI.tree component
 
 component :: R.Component Props
 component = R.hooksComponent "bar" cpt where
-  cpt _ _ = do
+  cpt props children = do
     -- Component parts for <bar>
-    -- ...
+    pure $ R.fragment children
+
 ```
 
 ### Optional props
@@ -164,30 +172,37 @@ There is a distinction to be noted here, mainly due to PureScript paradigms. As 
 
 Here is were the optional props comes to mind. For now, let's put aside the fact that a base component (such as `<a/>`) can have an undefined amount yet possibly numerous of attributes. Here we will focus on component that receive spec-ed props. For example:
 
-```purescript
--- Specs for the <icon> component
+```haskell
+module Hello.Components.Example.Icon (icon) where
+
+import Prelude
+
+import Hello.Plugins.Core.UI as UI
+import Reactix as R
+
 type Props =
   ( name :: String
   | Options
   )
 
 type Options =
-  ( theme :: Theme
+  ( theme :: String
   )
 
 options :: Record Options
 options =
-  { theme: Theme.Filled -- filled/two-tones/outlined/etc. Filled is the default theme of Google Material Design Icons
+  { theme: "filled" -- filled/two-tones/outlined/etc. Filled is the default theme of Google Material Design Icons
   }
-
 
 icon :: forall r. UI.OptLeaf Options Props r
 icon = UI.optLeaf component options
 
 component :: R.Component Props
 component = R.hooksComponent "icon" cpt where
-      -- Component parts for <icon>
-      -- ...
+  cpt props _ = do
+    -- Component parts for <icon>
+    pure mempty
+
 ```
 
 ### [@TODO] DOMAttrs Prop
@@ -202,6 +217,49 @@ The transmission of DOM Attributes (programmatically or not) is a useful feature
 
 
 Ideally with PureScript + Reactix, the aim could be to have a Row such as `attrs :: DOMAttrs`. Where DOMAttrs could be used as a Record of optional values (such as the use in "purescript-react-basic"). Hence, two tweaks to work: attrs has to be optional, the content of the attrs Record also have to be optional. They have not vocation to be programmatically treated, just handed over from one component to another.
+
+
+### Pages & Layouts
+
+These components respect the exact structure we saw earlier. However, they are prone to an implicit implementation, such as:
+* **determined variable names**: each module has to export a certain amount of attended variables
+* **`page` / `layout`**: refering to the component specs we have seen before
+* **`premount`**: `Aff` monad runned before the page first mount, can `throw` an error to abort the redirection to the page / layouts
+* **`layout`**: each pages should subscribe to an existing layout
+
+```haskell
+module Hello.Pages.Example (page, premount, layout) where
+
+import Prelude
+
+import Effect.Aff (Aff)
+import Hello.Plugins.Core.Layouts as LT
+import Hello.Plugins.Core.Routes as RT
+import Hello.Plugins.Core.Stores (RootStore)
+import Hello.Plugins.Core.UI as UI
+import Hello.Plugins.Middlewares.Authenticated (authenticated)
+import Reactix as R
+import Reactix.DOM.HTML as H
+
+-- this is the "Example" page component
+page :: UI.Leaf()
+page = UI.leaf component
+
+-- subscribe the page to the "dashboard" layout
+layout :: LT.Layout
+layout = LT.Dashboad
+
+-- on premount custom hook, import a middleware checking the authentication
+-- of the current user (and will throw an error if anonymous, cath)
+--
+-- the premount can also served as a Store hydration, quick XHR/graph calls, etc
+premount :: Record RootStore -> Aff Unit
+premount rootStore = authenticated rootStore
+
+component :: R.Component ()
+component = R.hooksComponent "page-misc" cpt where
+  cpt _ _ = pure mempty
+```
 
 
 ## Form validation
