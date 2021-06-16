@@ -3,7 +3,7 @@ module Hello.Plugins.Core.UI
   , tree, leaf, optLeaf, optTree
   , appContainer, inject, inject', spreadAttrs, if', if_
   , buff, scuff, getPortalHost
-  , useLive'
+  , useLive', useBox'
   ) where
 
 import Prelude
@@ -12,6 +12,8 @@ import DOM.Simple (Element, document)
 import DOM.Simple.Console (log)
 import Data.Maybe (Maybe(..))
 import Data.Nullable (toMaybe)
+import Data.Tuple (Tuple)
+import Data.Tuple.Nested ((/\))
 import Effect (Effect)
 import FFI.Simple (delay, (...))
 import Hello.Plugins.Core.ConvertableOptions (class Defaults, defaults) as CO
@@ -104,3 +106,11 @@ if_ pred arr = if pred then (R.fragment arr) else mempty
 -- | Toestand `useLive` automatically sets to "unchanged" behavior
 useLive' :: forall box b. T.Read box b => Eq b => box -> R.Hooks b
 useLive' = T.useLive T.unequal
+
+-- | Toestand `useBox` + `useLive'` shorthand following same patterns as
+-- | React StateHooks API
+useBox' :: forall b. Eq b => b -> R.Hooks (Tuple b (T.Box b))
+useBox' default = do
+  box <- T.useBox default
+  b <- useLive' box
+  pure $ b /\ box

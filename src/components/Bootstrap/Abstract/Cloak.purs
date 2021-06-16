@@ -6,6 +6,7 @@ import Prelude
 
 import Data.Foldable (elem, intercalate)
 import Data.Maybe (Maybe, fromMaybe)
+import Data.Tuple.Nested ((/\))
 import Effect.Timer (setTimeout)
 import Hello.Plugins.Core.UI as UI
 import Reactix as R
@@ -113,8 +114,8 @@ component :: R.Component Props
 component = R.hooksComponent cname cpt where
   cpt props _ = do
     -- State
-    phaseBox <- T.useBox (Idle :: Phase)
-    phase    <- UI.useLive' phaseBox
+    phase /\ phaseBox <- UI.useBox' (Idle :: Phase)
+
     -- Computed
     className <- pure $ intercalate " "
       -- provided custom className
