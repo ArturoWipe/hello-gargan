@@ -37,11 +37,11 @@ component = R.hooksComponent cname cpt where
     -- Router configuration
     useHashRouter RT.routes store.nextRoute
     -- @onRouteChange: launch premount process, set new layout and page
-    R.useEffect1 nextRoute $ R.thenNothing $ launchAff_ do
+    R.useEffect1' nextRoute $ launchAff_ do
       cancelRouting rootStore
       execRouting rootStore
     -- @onRouteChange: logging purpose
-    R.useEffect1 route $ R.thenNothing $
+    R.useEffect1' route $
       maybe R.nothing console.log route
     -- -- Render
     pure $

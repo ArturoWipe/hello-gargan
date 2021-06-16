@@ -22,7 +22,7 @@ console = C.encloseContext C.Plugin cname
 component :: R.Component ()
 component = R.hooksComponent cname cpt where
   cpt _ _ = do
-    R.useEffectOnce $ R.thenNothing $ console.log "mounted"
+    R.useEffectOnce' $ console.log "mounted"
     -- Custom hooks
     Bar.useLoadingProgressBar loadingProgressBarParams
     -- Render

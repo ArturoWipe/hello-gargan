@@ -24,6 +24,14 @@
 @function darken($color, $percentage) {
   @return mix(black, $color, $percentage);
 }
+/// Add alpha channel to a color
+/// @access public
+/// @param {Color} $color - color to work with
+/// @param {Number} $percentage - percentage of `$color` opacity
+/// @return {Color}
+@function mixAlpha($color, $percentage) {
+  @return rgba($color, $percentage);
+}
 /// Calculate z-index value
 /// @access public
 /// @use {List} $z-indexes

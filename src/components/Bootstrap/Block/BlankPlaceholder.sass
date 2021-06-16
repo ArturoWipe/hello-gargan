@@ -1,0 +1,26 @@
+.b-blank-placeholder
+  $sweeper-width: 45px
+  $band-color-1: mixAlpha($gray-96, 5%)
+  $band-color-2: mixAlpha($gray-96, 30%)
+  $band-color-3: mixAlpha($gray-96, 60%)
+
+  position: relative
+  height: 100%
+  width: 100%
+  min-height: inherit
+  overflow: hidden // prevent sweeper to be seen outside of its stack
+
+  &__sweeper
+    position: absolute
+    left: - $sweeper-width
+    height: 100%
+    width: $sweeper-width
+    background-image: linear-gradient(0.25turn, $band-color-1, $band-color-2, $band-color-3)
+    animation: _loading 1s infinite
+
+  @keyframes _loading
+    0%
+      left: - $sweeper-width
+
+    100%
+      left: 100%

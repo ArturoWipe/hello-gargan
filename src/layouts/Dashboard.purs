@@ -17,7 +17,8 @@ cname :: String
 cname = "layout-dashboard"
 
 premount :: Record RootStore -> Aff Unit
-premount rootStore = authenticated rootStore
+-- premount rootStore = authenticated rootStore
+premount _ = pure unit
 
 component :: R.Component ()
 component = R.hooksComponent cname cpt where
@@ -53,11 +54,7 @@ component = R.hooksComponent cname cpt where
             [ H.div
               { className: cname <> "__content card"
               }
-              [
-                H.div
-                { className: "card-body" }
-                children
-              ]
+              children
             ]
           ]
         ]

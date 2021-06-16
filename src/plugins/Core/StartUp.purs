@@ -29,7 +29,7 @@ component = R.hooksComponent cname cpt where
     onPending <- UI.useLive' onPendingBox
     -- (?) Use this hooks as an entry point for every computations
     --     needed to be made pre-app-render (eg. Config API, etc.)
-    R.useEffectOnce $ R.thenNothing $ launchAff_ do
+    R.useEffectOnce' $ launchAff_ do
       delay $ Milliseconds 1000.0
       liftEffect $ T.write_ true onPendingBox
       liftEffect $ console.log "start up done"

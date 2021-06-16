@@ -2,7 +2,10 @@ module Hello.Pages.Misc (page, premount, layout) where
 
 import Prelude
 
-import Effect.Aff (Aff)
+import Data.Maybe (Maybe(..))
+import Effect.Aff (Aff, Milliseconds(..), delay, launchAff_)
+import Effect.Class (liftEffect)
+import Hello.Components.Bootstrap as B
 import Hello.Plugins.Core.Console as C
 import Hello.Plugins.Core.Layouts as Layouts
 import Hello.Plugins.Core.Routes as RT
@@ -12,6 +15,7 @@ import Hello.Plugins.Hooks.LinkHandler (useLinkHandler)
 import Hello.Plugins.Middlewares.Authenticated (authenticated)
 import Reactix as R
 import Reactix.DOM.HTML as H
+import Toestand as T
 
 page :: UI.Leaf()
 page = UI.leaf component
@@ -33,17 +37,47 @@ component = R.hooksComponent cname cpt where
   cpt _ _ = do
     -- Custom hooks
     { route } <- useLinkHandler
+    -- State
+    onPendingBox <- T.useBox (true :: Boolean)
+    onPending    <- UI.useLive' onPendingBox
+    -- Effects (simulate an async store action fetching data  and
+    -- finishing after this page first render)
+    R.useEffectOnce' $ launchAff_ do
+      simulateAPIRequest
+      liftEffect $ T.write_ false onPendingBox
     -- Render
+    let
+      cloakSlot =
+        B.blankPlaceholder
+        { className: cname <> "__placeholder" }
+
+      defaultSlot =
+        H.div
+        { className: cname <> "__inner" }
+        [
+          H.h3 {} [ H.text "This is the Misc page" ]
+        , H.a
+          { href: route RT.Home }
+          [ H.text "go to home page" ]
+        , H.a
+          { href: route RT.Authentication }
+          [ H.text "go to auth page" ]
+        ]
+
     pure $
+
 
       H.div
       { className: cname }
       [
-        H.h3 {} [ H.text "This is the Misc page" ]
-      , H.a
-        { href: route RT.Home }
-        [ H.text "go to home page" ]
-      , H.a
-        { href: route RT.Authentication }
-        [ H.text "go to auth page" ]
+        B.cloak
+        { isDisplayed: not onPending
+        , idlingPhaseDuration: Just 20
+        , sustainingPhaseDuration: Just 400
+        , cloakSlot
+        , defaultSlot
+        }
       ]
+
+simulateAPIRequest :: Aff Unit
+simulateAPIRequest = delay $ Milliseconds 3000.0

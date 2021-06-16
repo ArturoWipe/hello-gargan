@@ -34,8 +34,8 @@ useLoadingProgressBar params = do
   { "core/navigation": store } <- useStores
   mode <- UI.useLive' store.mode
   -- Configuring & adapting "topbar" foreign library
-  R.useEffectOnce $ R.thenNothing $ configTopbar params
+  R.useEffectOnce' $ configTopbar params
 
-  R.useEffect1 mode $ R.thenNothing $ case mode of
+  R.useEffect1' mode $ case mode of
     Store.Fetching -> showTopbar
     Store.Idling   -> hideTopbar
