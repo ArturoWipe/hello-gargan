@@ -17,8 +17,7 @@ cname :: String
 cname = "layout-dashboard"
 
 premount :: Record RootStore -> Aff Unit
--- premount rootStore = authenticated rootStore
-premount _ = pure unit
+premount rootStore = authenticated rootStore
 
 component :: R.Component ()
 component = R.hooksComponent cname cpt where

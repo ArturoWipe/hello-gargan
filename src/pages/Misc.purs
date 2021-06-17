@@ -3,6 +3,7 @@ module Hello.Pages.Misc (page, premount, layout) where
 import Prelude
 
 import Data.Maybe (Maybe(..))
+import Data.Tuple.Nested ((/\))
 import Effect.Aff (Aff, Milliseconds(..), delay, launchAff_)
 import Effect.Class (liftEffect)
 import Hello.Components.Bootstrap as B
@@ -38,8 +39,7 @@ component = R.hooksComponent cname cpt where
     -- Custom hooks
     { route } <- useLinkHandler
     -- State
-    onPendingBox <- T.useBox (true :: Boolean)
-    onPending    <- UI.useLive' onPendingBox
+    onPending /\ onPendingBox <- UI.useBox' true
     -- Effects (simulate an async store action fetching data  and
     -- finishing after this page first render)
     R.useEffectOnce' $ launchAff_ do
@@ -56,10 +56,12 @@ component = R.hooksComponent cname cpt where
         { className: cname <> "__inner" }
         [
           H.h3 {} [ H.text "This is the Misc page" ]
-        , H.a
+        ,
+          H.a
           { href: route RT.Home }
           [ H.text "go to home page" ]
-        , H.a
+        ,
+          H.a
           { href: route RT.Authentication }
           [ H.text "go to auth page" ]
         ]
