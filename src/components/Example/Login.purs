@@ -11,11 +11,12 @@ import Hello.Components.Bootstrap as B
 import Hello.Plugins.Core.Conditional ((?))
 import Hello.Plugins.Core.Console as C
 import Hello.Plugins.Core.UI as UI
-import Hello.Plugins.Hooks.FormState (useFormState)
+import Hello.Plugins.Hooks.FormState.Unboxed (useFormState)
 import Hello.Plugins.Hooks.FormValidation (VForm, useFormValidation)
 import Hello.Plugins.Hooks.FormValidation.Unboxed as FV
 import Reactix as R
 import Reactix.DOM.HTML as H
+import Toestand as T
 
 type Props =
   ( callback :: Record FormData -> Effect Unit
@@ -35,7 +36,7 @@ component :: R.Component Props
 component = R.hooksComponent cname cpt where
   cpt props _ = do
     -- Custom Hooks
-    { state, setStateKey, bindStateKey } <- useFormState defaultData
+    { state, setStateKey, bindStateKey, stateBox } <- useFormState defaultData
     fv <- useFormValidation
     -- @onEmailChange: showing UI best practices regarding validation
     onEmailChange <- pure \value -> do
@@ -44,9 +45,14 @@ component = R.hooksComponent cname cpt where
 
       if (fv.tryCount > 0)
 
-      then pure unit
-      <*   fv.removeError' "email"
-      <*   fv.try' (\_ -> validateEmail value)
+      then do
+        -- As we have just modified the "email" value above
+        -- performing a validation via `state` data will not reflect this change
+        -- So we have to use Toestand API to retrieve the very-last state
+        state' <- T.read stateBox
+        fv.removeError' "email"
+        _ <- fv.try' (\_ -> validateEmail state')
+        pure unit
 
       else pure unit
 
@@ -57,9 +63,14 @@ component = R.hooksComponent cname cpt where
 
       if (fv.tryCount > 0)
 
-      then pure unit
-      <*   fv.removeError' "password"
-      <*   fv.try' (\_ -> validatePassword value)
+      then do
+        -- As we have just modified the "email" value above
+        -- performing a validation via `state` data will not reflect this change
+        -- So we have to use Toestand API to retrieve the very-last state
+        state' <- T.read stateBox
+        fv.removeError' "password"
+        _ <- fv.try' (\_ -> validatePassword state')
+        pure unit
 
       else pure unit
 
@@ -167,13 +178,13 @@ defaultData =
   , password: ""
   }
 
-validateEmail :: String -> Effect VForm
-validateEmail s = FV.nonEmpty "email" s
-               <> FV.email "email" s
+validateEmail :: Record FormData -> Effect VForm
+validateEmail r = FV.nonEmpty "email" r.email
+               <> FV.email "email" r.email
 
-validatePassword :: String -> Effect VForm
-validatePassword = FV.nonEmpty "password"
+validatePassword :: Record FormData -> Effect VForm
+validatePassword r = FV.nonEmpty "password" r.password
 
 globalValidation :: Record FormData -> Effect VForm
-globalValidation r = validateEmail r.email
-                  <> validatePassword r.password
+globalValidation r = validateEmail r
+                  <> validatePassword r
