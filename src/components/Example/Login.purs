@@ -8,12 +8,12 @@ import Data.Either (Either(..))
 import Data.Foldable (intercalate)
 import Effect (Effect)
 import Hello.Components.Bootstrap as B
-import Hello.Plugins.Hooks.FormState (useFormState)
-import Hello.Plugins.Hooks.FormValidation (VForm)
-import Hello.Plugins.Hooks.FormValidation as FV
 import Hello.Plugins.Core.Conditional ((?))
 import Hello.Plugins.Core.Console as C
 import Hello.Plugins.Core.UI as UI
+import Hello.Plugins.Hooks.FormState (useFormState)
+import Hello.Plugins.Hooks.FormValidation (VForm, useFormValidation)
+import Hello.Plugins.Hooks.FormValidation.Unboxed as FV
 import Reactix as R
 import Reactix.DOM.HTML as H
 
@@ -31,23 +31,12 @@ cname = "login"
 console :: C.Console
 console = C.encloseContext C.Component cname
 
-type FormData =
-  ( email :: String
-  , password :: String
-  )
-
-defaultData :: Record FormData
-defaultData =
-  { email: ""
-  , password: ""
-  }
-
 component :: R.Component Props
 component = R.hooksComponent cname cpt where
   cpt props _ = do
     -- Custom Hooks
-    fv <- FV.useFormValidation
-    r@{ state, setStateKey, bindStateKey } <- useFormState defaultData
+    { state, setStateKey, bindStateKey } <- useFormState defaultData
+    fv <- useFormValidation
     -- @onEmailChange: showing UI best practices regarding validation
     onEmailChange <- pure \value -> do
 
@@ -57,7 +46,7 @@ component = R.hooksComponent cname cpt where
 
       then pure unit
       <*   fv.removeError' "email"
-      <*   fv.try' (\_ -> validateEmail state)
+      <*   fv.try' (\_ -> validateEmail value)
 
       else pure unit
 
@@ -70,7 +59,7 @@ component = R.hooksComponent cname cpt where
 
       then pure unit
       <*   fv.removeError' "password"
-      <*   fv.try' (\_ -> validatePassword state)
+      <*   fv.try' (\_ -> validatePassword value)
 
       else pure unit
 
@@ -87,40 +76,41 @@ component = R.hooksComponent cname cpt where
     pure $
 
       H.form
-      { className: cname
-      }
+      { className: cname }
       [
         -- Email
         H.div
         { className: intercalate " "
-            [ "form-group"
-            , (fv.hasError' "email") ?
-                "form-group--error" $
-                mempty
-            ]
+          [ "form-group"
+          , (fv.hasError' "email") ?
+              "form-group--error" $
+              mempty
+          ]
         }
         [
-          H.div { className: "form-group__label" }
+          H.div
+          { className: "form-group__label" }
           [
             H.label {} [ H.text "Email"]
           ]
-
-        , H.div { className: "form-group__field" }
+        ,
+          H.div
+          { className: "form-group__field" }
           [
             B.formInput
             { callback: onEmailChange
             , value: state.email
             }
-
-          , UI.if' (fv.hasError' "email")
+          ,
+            UI.if' (fv.hasError' "email")
             ( H.div { className: "form-group__error" }
               [ H.text "Please enter a valid email address" ]
             )
           ]
         ]
-
+      ,
         -- Password
-      , H.div
+        H.div
         { className: intercalate " "
           [ "form-group"
           , (fv.hasError' "password") ?
@@ -129,29 +119,30 @@ component = R.hooksComponent cname cpt where
           ]
         }
         [
-          H.div { className: "form-group__label" }
+          H.div
+          { className: "form-group__label" }
           [
             H.label {} [ H.text "Password" ]
           ]
-
-        , H.div { className: "form-group__field" }
+        ,
+          H.div
+          { className: "form-group__field" }
           [
-
-            B.formInput $
+            B.formInput
             { type: "password"
             , callback: onPasswordChange
             , value: state.password
             }
-
-          , UI.if' (fv.hasError' "password")
-            ( H.div { className: "form-group__error" }
+          ,
+            UI.if' (fv.hasError' "password") $
+              H.div { className: "form-group__error" }
               [ H.text "Please enter a valid password" ]
-            )
           ]
         ]
-
+      ,
         -- Submit
-      , H.div { className: cname <> "__submit" }
+        H.div
+        { className: cname <> "__submit" }
         [
           B.button
           { callback: onSubmit
@@ -165,12 +156,24 @@ component = R.hooksComponent cname cpt where
       ]
 
 
-validateEmail :: Record FormData -> VForm
-validateEmail r = FV.nonEmpty "email" r.email
-               <> FV.email "email" r.email
+type FormData =
+  ( email    :: String
+  , password :: String
+  )
 
-validatePassword :: Record FormData -> VForm
-validatePassword r = FV.nonEmpty "password" r.password
+defaultData :: Record FormData
+defaultData =
+  { email   : ""
+  , password: ""
+  }
 
-globalValidation :: Record FormData -> VForm
-globalValidation r = validateEmail r <> validatePassword r
+validateEmail :: String -> Effect VForm
+validateEmail s = FV.nonEmpty "email" s
+               <> FV.email "email" s
+
+validatePassword :: String -> Effect VForm
+validatePassword = FV.nonEmpty "password"
+
+globalValidation :: Record FormData -> Effect VForm
+globalValidation r = validateEmail r.email
+                  <> validatePassword r.password

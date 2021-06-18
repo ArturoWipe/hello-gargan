@@ -10,13 +10,13 @@ import Effect (Effect)
 import Effect.Aff (Aff, launchAff_)
 import Effect.Class (liftEffect)
 import Hello.Components.Bootstrap as B
-import Hello.Plugins.Hooks.Debounce (useDebounce)
-import Hello.Plugins.Hooks.FormState (useFormState)
-import Hello.Plugins.Hooks.FormValidation (VForm, (<!>))
-import Hello.Plugins.Hooks.FormValidation as FV
 import Hello.Plugins.Core.Conditional ((?))
 import Hello.Plugins.Core.Console as C
 import Hello.Plugins.Core.UI as UI
+import Hello.Plugins.Hooks.Debounce (useDebounce)
+import Hello.Plugins.Hooks.FormState (useFormState)
+import Hello.Plugins.Hooks.FormValidation (VForm, (<!>), useFormValidation)
+import Hello.Plugins.Hooks.FormValidation.Unboxed as FV
 import Reactix as R
 import Reactix.DOM.HTML as H
 import Record (merge)
@@ -45,14 +45,15 @@ component :: R.Component Props
 component = R.hooksComponent cname cpt where
   cpt props _ = do
     -- Custom Hooks
-    fv <- FV.useFormValidation
-    r@{ state, setStateKey, bindStateKey } <- useFormState defaultData
+    { state, setStateKey, bindStateKey } <- useFormState defaultData
+    fv <- useFormValidation
     -- @onEmailChange: exec async validation for email unicity
     onEmailChange <- useDebounce 1000 \value -> launchAff_ do
 
       liftEffect do
         setStateKey "email" value
-        console.info "attempting dynamic validation on email"
+        console.info2 "attempting dynamic validation on email" value
+        fv.removeError_ "email" "emailUnicity"
 
       result <- fv.asyncTry' (\_ -> dynamicValidation value)
 
@@ -125,22 +126,23 @@ component = R.hooksComponent cname cpt where
             , value: state.email
             }
 
-          , UI.if' (fv.hasError_ "email" "nonEmpty" ||
-                    fv.hasError_ "email" "email"
-                   )
-            ( H.div { className: "form-group__error" }
-              [ H.text "Please enter a valid email address" ]
-            )
+          , if
+              fv.hasError_ "email" "nonEmpty" ||
+              fv.hasError_ "email" "email"
 
-          , UI.if' (fv.hasError_ "email" "emailUnicity")
-            ( H.div
-              { className: "form-group__error form-group__error--obtrusive" }
-              [ B.div' { className: "mt-1" }
-                "This email address is already being used"
-              , H.text
-                "Please use another one"
-              ]
-            )
+            then
+              H.div { className: "form-group__error" }
+              [ H.text "Please enter a valid email address" ]
+
+            else
+              UI.if' (fv.hasError_ "email" "emailUnicity") $
+              H.div
+                { className: "form-group__error form-group__error--obtrusive" }
+                [ B.div' { className: "mt-1" }
+                  "This email address is already being used"
+                , H.text
+                  "Please use another one"
+                ]
           ]
         ]
 
@@ -254,19 +256,17 @@ globalValidation r =
   in
     -- as this is an "asyncTry" validation (due to the presence of the
     -- simulated XHR for the email, we have to lift the "sync" rules)
-    ( pure $ foldl append mempty sync ) <> async
+    ( liftEffect $ foldl append mempty sync ) <> async
 
 
 
 dynamicValidation :: String -> Aff VForm
-dynamicValidation s =
-  let
-    rule = simulateOnlineEmailUnicity "email" s
-  in do
-    -- simulate call to API
-    pure rule
+dynamicValidation s = liftEffect $
+  -- simulate call to API
+  simulateOnlineEmailUnicity "email" s
 
-simulateOnlineEmailUnicity :: String -> String -> VForm
+
+simulateOnlineEmailUnicity :: String -> String -> Effect VForm
 simulateOnlineEmailUnicity field value
-  | value == "already@used.com" = invalid [ field /\ "emailUnicity" ]
-  | otherwise = pure unit
+  | value == "already@used.com" = pure $ invalid [ field /\ "emailUnicity" ]
+  | otherwise = pure $ pure unit
