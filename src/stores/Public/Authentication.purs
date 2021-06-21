@@ -27,8 +27,8 @@ state = \_ ->
   }
 
 type LoginData =
-  ( email :: String
-  , password :: String
+  ( email     :: String
+  , password  :: String
   )
 
 login :: Record Store -> Record LoginData -> Aff (Either Error Unit)

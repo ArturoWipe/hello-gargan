@@ -11,9 +11,9 @@ import Hello.Components.Bootstrap as B
 import Hello.Plugins.Core.Conditional ((?))
 import Hello.Plugins.Core.Console as C
 import Hello.Plugins.Core.UI as UI
-import Hello.Plugins.Hooks.FormState.Unboxed (useFormState)
 import Hello.Plugins.Hooks.FormValidation (VForm, useFormValidation)
 import Hello.Plugins.Hooks.FormValidation.Unboxed as FV
+import Hello.Plugins.Hooks.StateRecord (useStateRecord)
 import Reactix as R
 import Reactix.DOM.HTML as H
 import Toestand as T
@@ -36,7 +36,7 @@ component :: R.Component Props
 component = R.hooksComponent cname cpt where
   cpt props _ = do
     -- Custom Hooks
-    { state, setStateKey, bindStateKey, stateBox } <- useFormState defaultData
+    { state, stateBox, setStateKey, bindStateKey } <- useStateRecord defaultData
     fv <- useFormValidation
     -- @onEmailChange: showing UI best practices regarding validation
     onEmailChange <- pure \value -> do

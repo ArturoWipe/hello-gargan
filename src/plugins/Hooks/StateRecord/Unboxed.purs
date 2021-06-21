@@ -1,17 +1,16 @@
-module Hello.Plugins.Hooks.FormState.Boxed
-  ( useFormState
-  , TwoWayBinding
+module Hello.Plugins.Hooks.StateRecord.Unboxed
+  ( useStateRecord
+  , useStateRecord'
   ) where
 
 import Prelude
 
 import Data.Eq (class EqRecord)
-import Data.Tuple.Nested ((/\))
 import Effect (Effect)
 import Hello.Plugins.Core.UI as UI
+import Hello.Plugins.Hooks.StateRecord.Behaviors (TwoWayBinding, binder, setter)
 import Prim.RowList (class RowToList)
 import Reactix as R
-import Record.Unsafe (unsafeGet, unsafeSet)
 import Toestand as T
 
 type Methods r a =
@@ -26,18 +25,13 @@ type Methods r a =
   , bindStateKey  :: String -> Record (TwoWayBinding a)
   )
 
-type TwoWayBinding a =
-  ( callback      :: a -> Effect Unit
-  , value         :: a
-  )
-
 -- | Hooks inspired from this article
 -- |
 -- | https://blog.logrocket.com/forms-in-react-in-2020/
 -- |
 -- | ```purescript
 -- |
--- |  r <- useFormState defaultValues
+-- |  r <- useStateRecord defaultValues
 -- |
 -- | ...
 -- |
@@ -52,38 +46,37 @@ type TwoWayBinding a =
 -- | B.formInput $
 -- |   { ... } `merge` r.bindStateKey "prop"
 -- |
-useFormState :: forall a r l.
+useStateRecord :: forall a r l.
      RowToList r l
   => EqRecord l r
   => Record r
   -> R.Hooks (Record (Methods r a))
-useFormState initialValues = do
+useStateRecord = T.useBox >=> main
 
-  state /\ stateBox <- UI.useBox' initialValues
+-- | Variant where `stateBox :: Box (Record r)` is already instanciated and
+-- | provided
+useStateRecord' :: forall a r l.
+     T.ReadWrite (T.Box (Record r)) (Record r)
+  => RowToList r l
+  => EqRecord l r
+  => T.Box (Record r)
+  -> R.Hooks (Record (Methods r a))
+useStateRecord' = main
+
+
+main :: forall a r l.
+     T.ReadWrite (T.Box (Record r)) (Record r)
+  => RowToList r l
+  => EqRecord l r
+  => T.Box (Record r)
+  -> R.Hooks (Record (Methods r a))
+main stateBox = do
+
+  state <- UI.useLive' stateBox
 
   pure
     { state
     , stateBox
-    , setStateKey : (_ # stateBox # set_)
-    , bindStateKey: (_ # stateBox # bind_ $ state)
+    , setStateKey : (_ # stateBox # setter)
+    , bindStateKey: (_ # stateBox # binder $ state)
     }
-
-----
-
-set_ :: forall box r a. T.ReadWrite box (Record r)
-  => box
-  -> String
-  -> a
-  -> Effect Unit
-set_ stateBox field value = T.modify_ (\prev -> unsafeSet field value prev) stateBox
-
-
-bind_ :: forall box r a. T.ReadWrite box (Record r)
-  => box
-  -> Record r
-  -> String
-  -> Record (TwoWayBinding a)
-bind_ stateBox state field =
-  { callback: \value -> set_ stateBox field value
-  , value: unsafeGet field state
-  }

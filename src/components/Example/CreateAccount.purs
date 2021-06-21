@@ -14,7 +14,7 @@ import Hello.Plugins.Core.Conditional ((?))
 import Hello.Plugins.Core.Console as C
 import Hello.Plugins.Core.UI as UI
 import Hello.Plugins.Hooks.Debounce (useDebounce)
-import Hello.Plugins.Hooks.FormState.Unboxed (useFormState)
+import Hello.Plugins.Hooks.StateRecord.Unboxed (useStateRecord)
 import Hello.Plugins.Hooks.FormValidation (VForm, (<!>), useFormValidation)
 import Hello.Plugins.Hooks.FormValidation.Unboxed as FV
 import Reactix as R
@@ -45,7 +45,7 @@ component :: R.Component Props
 component = R.hooksComponent cname cpt where
   cpt props _ = do
     -- Custom Hooks
-    { state, setStateKey, bindStateKey } <- useFormState defaultData
+    { state, setStateKey, bindStateKey } <- useStateRecord defaultData
     fv <- useFormValidation
     -- @onEmailChange: exec async validation for email unicity
     onEmailChange <- useDebounce 1000 \value -> launchAff_ do
